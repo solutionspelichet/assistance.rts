@@ -6,8 +6,8 @@
   <style>
     body { font-family: 'Trebuchet MS', sans-serif; max-width: 600px; margin: auto; text-align: center; }
     input, textarea, button { width: 100%; padding: 10px; margin: 8px 0; }
-    button { background-color: #25D366; color: white; font-weight: bold; border: none; }
-    .logo-bar { display: flex; justify-content: space-between; align-items: center; }
+    button { background-color: #25D366; color: white; font-weight: bold; border: none; cursor: pointer; }
+    .logo-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
     img.logo { height: 50px; }
   </style>
 </head>
@@ -52,17 +52,15 @@
       const arrivee = document.getElementById("arrivee").value;
       const probleme = document.getElementById("probleme").value;
 
-      // Remplir les champs cachés pour Google Forms (sauf email)
+      // Remplissage du formulaire caché Google Forms
       document.getElementById("formPrenom").value = prenom;
       document.getElementById("formNom").value = nom;
       document.getElementById("formDepart").value = depart;
       document.getElementById("formArrivee").value = arrivee;
       document.getElementById("formProbleme").value = probleme;
-
-      // Envoi du formulaire à Google Forms
       document.getElementById("hiddenForm").submit();
 
-      // Redirection vers WhatsApp
+      // Redirection WhatsApp
       const message = `Je suis *${prenom} ${nom}*\nmon email est *${email}*\nmon bureau actuel est *${depart}*\net mon bureau de destination est *${arrivee}*\nJe rencontre le problème : *${probleme}*`;
       const url = `https://wa.me/41796882735?text=${encodeURIComponent(message)}`;
       setTimeout(() => window.open(url, "_blank"), 500);
