@@ -14,8 +14,8 @@
 </head>
 <body>
   <div class="logo-bar">
-    <img src="whatsapp_logo.png" class="logo">
-    <img src="pelichet_logo.jpg" class="logo">
+    <img src="whatsapp_logo.png" class="logo" alt="Logo WhatsApp">
+    <img src="pelichet_logo.jpg" class="logo" alt="Logo Pelichet">
   </div>
 
   <h2>Demande d’assistance</h2>
@@ -41,7 +41,7 @@
       const arrivee = document.getElementById("arrivee").value;
       const probleme = document.getElementById("probleme").value;
 
-      // Appel Google Apps Script
+      // Appel Google Apps Script (version finale)
       fetch("https://script.google.com/macros/s/AKfycbxAawZdEMGLh-3ksCSnMqLXKJigQxEE6bupzn8o6wGMO6TTP6H3XiLSaCHZ_KrNYUza/exec", {
         method: "POST",
         body: JSON.stringify({
