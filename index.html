@@ -29,10 +29,9 @@
     <button type="submit">Envoyer sur WhatsApp</button>
   </form>
 
- <form id="hiddenForm" action="https://docs.google.com/forms/d/e/1FAIpQLSfA_Pt1Lz4ZvYsLoCvIr1mAA4nFvolltBAHW8sAue55Fbff5w/formResponse"
-      method="POST" target="hidden_iframe" style="display: none;">
-
-    <input name="entry.309984089" id="formEmail">
+  <form id="hiddenForm"
+        action="https://docs.google.com/forms/d/e/1FAIpQLSfA_Pt1Lz4ZvYsLoCvIr1mAA4nFvolltBAHW8sAue55Fbff5w/formResponse"
+        method="POST" target="hidden_iframe" style="display: none;">
     <input name="entry.1940246757" id="formPrenom">
     <input name="entry.415961000" id="formNom">
     <input name="entry.1572544915" id="formDepart">
@@ -53,8 +52,6 @@
       const arrivee = document.getElementById("arrivee").value;
       const probleme = document.getElementById("probleme").value;
 
-      // Remplir le formulaire Google Forms caché
-      document.getElementById("formEmail").value = email;
       document.getElementById("formPrenom").value = prenom;
       document.getElementById("formNom").value = nom;
       document.getElementById("formDepart").value = depart;
@@ -63,8 +60,7 @@
 
       document.getElementById("hiddenForm").submit();
 
-      // Redirection WhatsApp
-      const message = `Je suis *${prenom} ${nom}*\nmon email est *${email}*\nmon bureau actuel est *${depart}*\net mon bureau de destination est *${arrivee}*.\nJe rencontre le problème : *${probleme}*`;
+      const message = `Je suis *${prenom} ${nom}*\nmon email est *${email}*\nmon bureau actuel est *${depart}*\net mon bureau de destination est *${arrivee}*\nJe rencontre le problème : *${probleme}*`;
       const url = `https://wa.me/41796882735?text=${encodeURIComponent(message)}`;
       setTimeout(() => window.open(url, "_blank"), 500);
     });
