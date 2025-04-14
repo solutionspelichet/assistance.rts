@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Demande d'assistance - Pelichet</title>
+  <style>
+    body {
+      font-family: 'Trebuchet MS', sans-serif;
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+      text-align: center;
+    }
+    img.logo {
+      height: 50px;
+      margin: 0 15px;
+    }
+    .logo-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 16px;
+    }
+    button {
+      background-color: #25D366;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #128C7E;
+    }
+  </style>
+</head>
+<body>
+  <div class="logo-bar">
+    <img src="whatsapp_logo.png" alt="WhatsApp Logo" class="logo">
+    <img src="pelichet_logo.jpg" alt="Pelichet Logo" class="logo">
+  </div>
+
+  <h2>Demande d'assistance</h2>
+
+  <form id="waForm">
+    <input type="email" id="email" placeholder="Adresse e-mail" required />
+    <input type="text" id="prenom" placeholder="Prénom" required />
+    <input type="text" id="nom" placeholder="Nom" required />
+    <input type="text" id="depart" placeholder="Lieu de départ" required />
+    <input type="text" id="arrivee" placeholder="Lieu d'arrivée" required />
+    <textarea id="probleme" placeholder="Description du problème" required></textarea>
+    <button type="submit">Envoyer sur WhatsApp</button>
+  </form>
+
+  <!-- Formulaire caché pour Google Forms -->
+  <form id="hiddenForm" action="https://docs.google.com/forms/d/e/1FAIpQLSfA_Pt1Lz4ZvYsLoCvIr1mAA4nFvolltBAHW8sAue55Fbff5w/formResponse" method="POST" target="hidden_iframe" style="display: none;">
+    <input name="entry.965005948" id="formEmail">
+    <input name="entry.1473253160" id="formPrenom">
+    <input name="entry.859380924" id="formNom">
+    <input name="entry.1639857911" id="formDepart">
+    <input name="entry.572357675" id="formArrivee">
+    <input name="entry.1899005106" id="formProbleme">
+  </form>
+  <iframe name="hidden_iframe" style="display: none;"></iframe>
+
+  <script>
+    document.getElementById("waForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const email = document.getElementById("email").value;
+      const prenom = document.getElementById("prenom").value;
+      const nom = document.getElementById("nom").value;
+      const depart = document.getElementById("depart").value;
+      const arrivee = document.getElementById("arrivee").value;
+      const probleme = document.getElementById("probleme").value;
+
+      // Génération du message WhatsApp
+      const message = `Je suis *${prenom} ${nom}*,
+mon email est *${email}*,
+mon bureau actuel est *${depart}*
+et mon bureau de destination est *${arrivee}*.
+Je rencontre le problème : *${probleme}*.`;
+      const encodedMsg = encodeURIComponent(message);
+      const numero = "41796882735"; // Numéro WhatsApp Pelichet
+      const waLink = `https://wa.me/${numero}?text=${encodedMsg}`;
+
+      // Remplissage du formulaire Google Forms invisible
+      document.getElementById("formEmail").value = email;
+      document.getElementById("formPrenom").value = prenom;
+      document.getElementById("formNom").value = nom;
+      document.getElementById("formDepart").value = depart;
+      document.getElementById("formArrivee").value = arrivee;
+      document.getElementById("formProbleme").value = probleme;
+      document.getElementById("hiddenForm").submit();
+
+      // Ouverture WhatsApp
+      setTimeout(() => {
+        window.open(waLink, "_blank");
+      }, 300);
+    });
+  </script>
+</body>
+</html>
