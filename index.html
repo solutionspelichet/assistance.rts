@@ -52,14 +52,17 @@
       const arrivee = document.getElementById("arrivee").value;
       const probleme = document.getElementById("probleme").value;
 
+      // Remplir les champs cachés pour Google Forms (sauf email)
       document.getElementById("formPrenom").value = prenom;
       document.getElementById("formNom").value = nom;
       document.getElementById("formDepart").value = depart;
       document.getElementById("formArrivee").value = arrivee;
       document.getElementById("formProbleme").value = probleme;
 
+      // Envoi du formulaire à Google Forms
       document.getElementById("hiddenForm").submit();
 
+      // Redirection vers WhatsApp
       const message = `Je suis *${prenom} ${nom}*\nmon email est *${email}*\nmon bureau actuel est *${depart}*\net mon bureau de destination est *${arrivee}*\nJe rencontre le problème : *${probleme}*`;
       const url = `https://wa.me/41796882735?text=${encodeURIComponent(message)}`;
       setTimeout(() => window.open(url, "_blank"), 500);
