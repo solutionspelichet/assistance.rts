@@ -48,14 +48,20 @@
   <h2>Demande d'assistance</h2>
 
   <form id="waForm">
-    <input type="email" id="email" placeholder="Adresse e-mail" required />
-    <input type="text" id="prenom" placeholder="Prénom" required />
-    <input type="text" id="nom" placeholder="Nom" required />
-    <input type="text" id="depart" placeholder="Lieu de départ" required />
-    <input type="text" id="arrivee" placeholder="Lieu d'arrivée" required />
-    <textarea id="probleme" placeholder="Description du problème" required></textarea>
-    <button type="submit">Envoyer sur WhatsApp</button>
-  </form>
+  <input type="email" id="email" placeholder="Adresse e-mail" required />
+  <input type="text" id="prenom" placeholder="Prénom" required />
+  <input type="text" id="nom" placeholder="Nom" required />
+  <input type="text" id="depart" placeholder="Lieu de départ" required />
+  <input type="text" id="arrivee" placeholder="Lieu d'arrivée" required />
+  <textarea id="probleme" placeholder="Description du problème" required></textarea>
+
+  <!-- 📸 Upload de photos -->
+  <label>Ajouter des photos (optionnel) :</label>
+  <input type="file" id="photos" accept="image/*" multiple capture="environment" />
+
+  <button type="submit">Envoyer sur WhatsApp</button>
+</form>
+
 
   <!-- Formulaire caché vers Google Forms -->
   <form id="hiddenForm"
