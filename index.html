@@ -127,10 +127,7 @@
     alert("Erreur d'envoi.");
       });
 
-      // --- Étape 3 : Redirection vers WhatsApp
-      const message = `Je suis *${prenom} ${nom}*,\nmon email est *${email}*,\nmon bureau actuel est *${depart}*\net mon bureau de destination est *${arrivee}*.\nJe rencontre le problème : *${probleme}*.`;
-      const whatsappURL = `https://wa.me/41796882735?text=${encodeURIComponent(message)}`;
-      setTimeout(() => window.open(whatsappURL, "_blank"), 300);
+     
     });
   </script>
 </body>
