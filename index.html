@@ -80,7 +80,7 @@
 
   <script>
     document.getElementById("waForm").addEventListener("submit", function (e) {
-      e.preventDefault();
+  e.preventDefault();
 
       const email = document.getElementById("email").value;
       const prenom = document.getElementById("prenom").value;
@@ -88,6 +88,20 @@
       const depart = document.getElementById("depart").value;
       const arrivee = document.getElementById("arrivee").value;
       const probleme = document.getElementById("probleme").value;
+      const files = document.getElementById("photos").files;
+
+      const formData = new FormData();
+      formData.append("email", email);
+      formData.append("prenom", prenom);
+      formData.append("nom", nom);
+      formData.append("depart", depart);
+      formData.append("arrivee", arrivee);
+      formData.append("probleme", probleme);
+
+      for (let i = 0; i < files.length; i++) {
+        formData.append("photos[]", files[i]);
+      }
+
 
       // --- Étape 1 : soumission au Google Forms
       document.getElementById("formEmail").value = email;
@@ -101,23 +115,16 @@
       // --- Étape 2 : envoi vers Google Apps Script
       fetch("https://script.google.com/macros/s/AKfycbyiaVgZz-AOr-otxwI4wEVyIVK3d4VBxslmeXEu_0t0NKVkRJEaS6o8jJamIgsUmUhu/exec", {
         method: "POST",
-        body: JSON.stringify({
-          email,
-          prenom,
-          nom,
-          depart,
-          arrivee,
-          probleme
-        }),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }).then(res => {
-        if (!res.ok) {
-          alert("Erreur d'enregistrement côté serveur.");
-        }
-      }).catch(err => {
-        console.error("Erreur serveur :", err);
+    body: formData
+  }).then(res => res.text()).then(response => {
+    // 🟢 WhatsApp après succès
+    const message = `Je suis *${prenom} ${nom}*\nmon email est *${email}*\nmon bureau actuel est *${depart}*\net mon bureau de destination est *${arrivee}*.\nJe rencontre le problème : *${probleme}*`;
+    const whatsappURL = `https://wa.me/41796882735?text=${encodeURIComponent(message)}`;
+    setTimeout(() => window.open(whatsappURL, "_blank"), 300);
+    alert("Demande envoyée avec succès !");
+  }).catch(error => {
+    console.error("Erreur : ", error);
+    alert("Erreur d'envoi.");
       });
 
       // --- Étape 3 : Redirection vers WhatsApp
