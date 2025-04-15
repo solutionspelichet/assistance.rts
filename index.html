@@ -57,8 +57,12 @@
     <button type="submit">Envoyer sur WhatsApp</button>
   </form>
 
-  <!-- Formulaire caché pour Google Forms -->
-  <form id="hiddenForm" action="https://docs.google.com/forms/d/e/1FAIpQLSfA_Pt1Lz4ZvYsLoCvIr1mAA4nFvolltBAHW8sAue55Fbff5w/formResponse" method="POST" target="hidden_iframe" style="display: none;">
+  <!-- Formulaire caché vers Google Forms -->
+  <form id="hiddenForm"
+    action="https://docs.google.com/forms/d/e/1FAIpQLSfA_Pt1Lz4ZvYsLoCvIr1mAA4nFvolltBAHW8sAue55Fbff5w/formResponse"
+    method="POST"
+    target="hidden_iframe"
+    style="display: none;">
     <input name="entry.1884616465" id="formEmail">
     <input name="entry.309984089" id="formPrenom">
     <input name="entry.1940246757" id="formNom">
@@ -69,7 +73,7 @@
   <iframe name="hidden_iframe" style="display: none;"></iframe>
 
   <script>
-    document.getElementById("waForm").addEventListener("submit", function(e) {
+    document.getElementById("waForm").addEventListener("submit", function (e) {
       e.preventDefault();
 
       const email = document.getElementById("email").value;
@@ -79,13 +83,7 @@
       const arrivee = document.getElementById("arrivee").value;
       const probleme = document.getElementById("probleme").value;
 
-      // Génération du message WhatsApp
-      const message = `Je suis *${prenom} ${nom}*,\nmon email est *${email}*,\nmon bureau actuel est *${depart}*\net mon bureau de destination est *${arrivee}*.\nJe rencontre le problème : *${probleme}*.`;
-      const encodedMsg = encodeURIComponent(message);
-      const numero = "41796882735"; // Numéro WhatsApp Pelichet
-      const waLink = `https://wa.me/${numero}?text=${encodedMsg}`;
-
-      // Remplissage du formulaire Google Forms invisible
+      // --- Étape 1 : soumission au Google Forms
       document.getElementById("formEmail").value = email;
       document.getElementById("formPrenom").value = prenom;
       document.getElementById("formNom").value = nom;
@@ -94,10 +92,32 @@
       document.getElementById("formProbleme").value = probleme;
       document.getElementById("hiddenForm").submit();
 
-      // Ouverture WhatsApp
-      setTimeout(() => {
-        window.open(waLink, "_blank");
-      }, 300);
+      // --- Étape 2 : envoi vers Google Apps Script
+      fetch("https://script.google.com/macros/s/AKfycbyiaVgZz-AOr-otxwI4wEVyIVK3d4VBxslmeXEu_0t0NKVkRJEaS6o8jJamIgsUmUhu/exec", {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          prenom,
+          nom,
+          depart,
+          arrivee,
+          probleme
+        }),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }).then(res => {
+        if (!res.ok) {
+          alert("Erreur d'enregistrement côté serveur.");
+        }
+      }).catch(err => {
+        console.error("Erreur serveur :", err);
+      });
+
+      // --- Étape 3 : Redirection vers WhatsApp
+      const message = `Je suis *${prenom} ${nom}*,\nmon email est *${email}*,\nmon bureau actuel est *${depart}*\net mon bureau de destination est *${arrivee}*.\nJe rencontre le problème : *${probleme}*.`;
+      const whatsappURL = `https://wa.me/41796882735?text=${encodeURIComponent(message)}`;
+      setTimeout(() => window.open(whatsappURL, "_blank"), 300);
     });
   </script>
 </body>
