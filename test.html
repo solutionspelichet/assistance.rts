@@ -1,3 +1,51 @@
-curl -X POST "https://script.google.com/macros/s/AKfyc.../exec" \
-  -H "Content-Type: text/plain" \
-  --data "test=ok"
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Test Envoi vers Apps Script</title>
+</head>
+<body style="font-family: Trebuchet MS; max-width: 500px; margin: 40px auto;">
+  <h2>Test Envoi Photo</h2>
+
+  <form id="testForm">
+    <input type="text" id="prenom" placeholder="Prénom" value="arnaud" required><br>
+    <input type="text" id="nom" placeholder="Nom" value="guedou" required><br>
+    <input type="email" id="email" placeholder="Email" value="arnaud.guedou@pelichet.ch" required><br><br>
+
+    <label for="file">Sélect. fichiers :</label>
+    <input type="file" id="file" name="file" multiple><br><br>
+
+    <button type="submit">Envoyer</button>
+  </form>
+
+  <p id="resultat"></p>
+
+  <script>
+    document.getElementById("testForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const formData = new FormData();
+      formData.append("prenom", document.getElementById("prenom").value);
+      formData.append("nom", document.getElementById("nom").value);
+      formData.append("email", document.getElementById("email").value);
+
+      const files = document.getElementById("file").files;
+      for (let i = 0; i < files.length; i++) {
+        formData.append("photos[]", files[i]);
+      }
+
+      fetch("https://script.google.com/macros/s/AKfycbyQY0NJSc4F1Ge_yliFhY5j_YeQWEwqZWdvVyp0E3XjnP6qdWXiQ3bEBfhpfCoZGqpi/exec", {
+        method: "POST",
+        body: formData
+      })
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("resultat").innerText = "Réponse : " + data;
+      })
+      .catch(error => {
+        document.getElementById("resultat").innerText = "Erreur : " + error;
+      });
+    });
+  </script>
+</body>
+</html>
