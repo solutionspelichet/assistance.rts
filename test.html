@@ -48,19 +48,25 @@
 
   <h2>Demande d'assistance</h2>
 
-  <form id="waForm">
-    <input type="email" id="email" placeholder="Adresse e-mail" required />
-    <input type="text" id="prenom" placeholder="Prénom" required />
-    <input type="text" id="nom" placeholder="Nom" required />
-    <input type="text" id="depart" placeholder="Lieu de départ" required />
-    <input type="text" id="arrivee" placeholder="Lieu d'arrivée" required />
-    <textarea id="probleme" placeholder="Description du problème" required></textarea>
+  <form id="waForm"
+      action="https://script.google.com/macros/s/AKfycbzdNoSYnarExhmYEm2zEwq5hTuMCyXqKXd5GeyGz2E/exec"
+      method="POST"
+      enctype="multipart/form-data">
 
-    <label>Ajouter des photos (optionnel) :</label>
-    <input type="file" id="photos" accept="image/*" multiple />
+  <!-- Champs texte -->
+  <input type="email" name="email" placeholder="Adresse e-mail" required />
+  <input type="text" name="prenom" placeholder="Prénom" required />
+  <input type="text" name="nom" placeholder="Nom" required />
+  <input type="text" name="depart" placeholder="Lieu de départ" required />
+  <input type="text" name="arrivee" placeholder="Lieu d'arrivée" required />
+  <textarea name="probleme" placeholder="Décrivez votre problème" required></textarea>
 
-    <button type="submit">Envoyer</button>
-  </form>
+  <!-- 📸 Upload photo -->
+  <label>Photos (optionnel) :</label>
+  <input type="file" name="photos[]" accept="image/*" multiple />
+
+  <button type="submit">Envoyer</button>
+</form>
 
   <script>
     document.getElementById("waForm").addEventListener("submit", function (e) {
