@@ -47,22 +47,20 @@
 
   <h2>Demande d'assistance</h2>
 
-  <form id="waForm" enctype="multipart/form-data">
-    <input type="email" id="email" name="email" placeholder="Adresse e-mail" required />
-    <input type="text" id="prenom" name="prenom" placeholder="Prénom" required />
-    <input type="text" id="nom" name="nom" placeholder="Nom" required />
-    <input type="text" id="depart" name="depart" placeholder="Lieu de départ" required />
-    <input type="text" id="arrivee" name="arrivee" placeholder="Lieu d'arrivée" required />
-    <textarea id="probleme" name="probleme" placeholder="Description du problème" required></textarea>
-
+  <form id="waForm">
+    <input type="email" id="email" placeholder="Adresse e-mail" required />
+    <input type="text" id="prenom" placeholder="Prénom" required />
+    <input type="text" id="nom" placeholder="Nom" required />
+    <input type="text" id="depart" placeholder="Lieu de départ" required />
+    <input type="text" id="arrivee" placeholder="Lieu d'arrivée" required />
+    <textarea id="probleme" placeholder="Description du problème" required></textarea>
     <label>Ajouter des photos (optionnel) :</label>
-    <input type="file" id="photos" name="photos[]" accept="image/*" multiple capture="environment" />
-
+    <input type="file" id="photos" accept="image/*" multiple />
     <button type="submit">Envoyer</button>
   </form>
 
   <script>
-    document.getElementById("waForm").addEventListener("submit", function (e) {
+    document.getElementById("waForm").addEventListener("submit", async function(e) {
       e.preventDefault();
 
       const email = document.getElementById("email").value;
@@ -80,29 +78,25 @@
       formData.append("depart", depart);
       formData.append("arrivee", arrivee);
       formData.append("probleme", probleme);
-
       for (let i = 0; i < files.length; i++) {
         formData.append("photos[]", files[i]);
       }
 
-      fetch("https://script.google.com/macros/s/AKfycbzdNoSYnarExhmYEm2zEwq5hTuMCyXqKXd5GeyGz2E/exec", {
-        method: "POST",
-        body: formData
-      })
-      .then(res => res.text())
-      .then(response => {
-        console.log("Réponse : ", response);
+      try {
+        const response = await fetch("https://script.google.com/macros/s/AKfycbzdNoSYnarExhmYEm2zEwq5hTuMCyXqKXd5GeyGz2E/exec", {
+          method: "POST",
+          body: formData
+        });
+        const result = await response.text();
+        alert(result);
 
         const message = `Je suis *${prenom} ${nom}*\nmon email est *${email}*\nmon bureau actuel est *${depart}*\net mon bureau de destination est *${arrivee}*.\nJe rencontre le problème : *${probleme}*`;
         const whatsappURL = `https://wa.me/41796882735?text=${encodeURIComponent(message)}`;
-
-        setTimeout(() => window.open(whatsappURL, "_blank"), 300);
-        alert("✅ Demande envoyée avec succès !");
-      })
-      .catch(error => {
-        console.error("Erreur : ", error);
+        setTimeout(() => window.open(whatsappURL, "_blank"), 500);
+      } catch (error) {
+        console.error("Erreur :", error);
         alert("❌ Erreur pendant l'envoi.");
-      });
+      }
     });
   </script>
 </body>
