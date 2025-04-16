@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -47,55 +48,51 @@
 
   <h2>Demande d'assistance</h2>
 
-  <form id="waForm" enctype="multipart/form-data">
+  <form id="waForm">
     <input type="email" name="email" placeholder="Adresse e-mail" required />
     <input type="text" name="prenom" placeholder="Prénom" required />
     <input type="text" name="nom" placeholder="Nom" required />
     <input type="text" name="depart" placeholder="Lieu de départ" required />
     <input type="text" name="arrivee" placeholder="Lieu d'arrivée" required />
     <textarea name="probleme" placeholder="Description du problème" required></textarea>
-
     <label>Ajouter des photos (optionnel) :</label>
-    <input type="file" name="photos[]" id="photos" accept="image/*" multiple capture="environment" />
-
+    <input type="file" name="photos[]" accept="image/*" multiple />
     <button type="submit">Envoyer</button>
   </form>
 
   <script>
-    document.getElementById("waForm").addEventListener("submit", function (e) {
-      e.preventDefault(); // 🛑 Empêche le submit classique
+    document.getElementById("waForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
 
-      const form = document.getElementById("waForm");
+      const form = e.target;
       const formData = new FormData(form);
+      const scriptURL = "https://script.google.com/macros/s/AKfycbzdNoSYnarExhmYEm2zEwq5hTuMCyXqKXd5GeyGz2E/exec";
 
-      const prenom = form.querySelector('[name="prenom"]').value;
-      const nom = form.querySelector('[name="nom"]').value;
-      const email = form.querySelector('[name="email"]').value;
-      const depart = form.querySelector('[name="depart"]').value;
-      const arrivee = form.querySelector('[name="arrivee"]').value;
-      const probleme = form.querySelector('[name="probleme"]').value;
+      try {
+        const response = await fetch(scriptURL, {
+          method: "POST",
+          body: formData
+        });
 
-      fetch("https://script.google.com/macros/s/AKfycbzdNoSYnarExhmYEm2zEwq5hTuMCyXqKXd5GeyGz2E/exec", {
-        method: "POST",
-        body: formData
-      })
-      .then(response => response.text())
-      .then(result => {
-        console.log("✅ Succès :", result);
+        const result = await response.text();
+        alert(result);
+
+        const email = form.email.value;
+        const prenom = form.prenom.value;
+        const nom = form.nom.value;
+        const depart = form.depart.value;
+        const arrivee = form.arrivee.value;
+        const probleme = form.probleme.value;
 
         const message = `Je suis *${prenom} ${nom}*\nmon email est *${email}*\nmon bureau actuel est *${depart}*\net mon bureau de destination est *${arrivee}*.\nJe rencontre le problème : *${probleme}*`;
         const whatsappURL = `https://wa.me/41796882735?text=${encodeURIComponent(message)}`;
 
-        setTimeout(() => {
-          window.open(whatsappURL, "_blank");
-        }, 100);
+        setTimeout(() => window.open(whatsappURL, "_blank"), 1000);
 
-        alert("Demande envoyée avec succès !");
-      })
-      .catch(error => {
-        console.error("❌ Erreur lors de l’envoi :", error);
-        alert("❌ Une erreur est survenue.");
-      });
+      } catch (error) {
+        console.error("Erreur lors de l'envoi :", error);
+        alert("Erreur lors de l'envoi. Merci de réessayer.");
+      }
     });
   </script>
 </body>
