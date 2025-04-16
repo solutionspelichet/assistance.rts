@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Formulaire Pelichet</title>
+</head>
+<body>
+  <h2>Test Envoi Photo</h2>
+  <form id="testForm">
+    <input type="text" name="prenom" placeholder="Prénom" required><br>
+    <input type="text" name="nom" placeholder="Nom" required><br>
+    <input type="email" name="email" placeholder="Email" required><br>
+    <input type="file" name="photos[]" multiple><br>
+    <button type="submit">Envoyer</button>
+  </form>
+
+  <script>
+    const form = document.getElementById("testForm");
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const formData = new FormData(form);
+      fetch("https://script.google.com/macros/s/AKfycbznFhRe9k_YQ4ZCRqHjovVqsr6-GNMaU_DEmL5Ifvl1rcDet1bZgczk8yL_LKd_avXI/exec", {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.text())
+      .then(response => alert("Réponse : " + response))
+      .catch(err => alert("Erreur : " + err));
+    });
+  </script>
+</body>
+</html>
