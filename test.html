@@ -86,26 +86,27 @@
         formData.append("photos[]", files[i]);
       }
 
-      // Envoi vers Google Apps Script
-      fetch(https://script.google.com/macros/s/AKfycbzdNoSYnarExhmYEm2zEwq5hTuMCyXqKXd5GeyGz2E/exec", {
+      // Ouvre WhatsApp dès le clic (pas après une promesse)
+      const message = `Je suis *${prenom} ${nom}*\nmon email est *${email}*\nmon bureau actuel est *${depart}*\net mon bureau de destination est *${arrivee}*.\nJe rencontre le problème : *${probleme}*`;
+      const whatsappURL = `https://wa.me/41796882735?text=${encodeURIComponent(message)}`;
+      window.open(whatsappURL, "_blank");
+
+      // Envoi en arrière-plan
+      fetch("https://script.google.com/macros/s/AKfycbyQY0NJSc4F1Ge_yliFhY5j_YeQWEwqZWdvVyp0E3XjnP6qdWXiQ3bEBfhpfCoZGqpi/exec", {
         method: "POST",
         body: formData
       })
       .then(response => response.text())
       .then(result => {
-        console.log("✅ Réponse Google Script :", result);
-
-        // Ouvre WhatsApp après réussite
-        const message = `Je suis *${prenom} ${nom}*\nmon email est *${email}*\nmon bureau actuel est *${depart}*\net mon bureau de destination est *${arrivee}*.\nJe rencontre le problème : *${probleme}*`;
-        const whatsappURL = `https://wa.me/41796882735?text=${encodeURIComponent(message)}`;
-        setTimeout(() => window.open(whatsappURL, "_blank"), 500);
-        alert("✅ Demande envoyée avec succès !");
+        console.log("✅ Google Script a répondu :", result);
+        alert("✅ Demande envoyée !");
       })
       .catch(error => {
-        console.error("❌ Erreur lors de l'envoi :", error);
-        alert("Erreur lors de l'envoi du formulaire.");
+        console.error("❌ Erreur Apps Script :", error);
+        alert("Erreur pendant l’envoi.");
       });
     });
   </script>
+
 </body>
 </html>
