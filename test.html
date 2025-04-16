@@ -48,51 +48,52 @@
   <h2>Demande d'assistance</h2>
 
   <form id="waForm" enctype="multipart/form-data">
-    <input type="email" id="email" name="email" placeholder="Adresse e-mail" required />
-    <input type="text" id="prenom" name="prenom" placeholder="Prénom" required />
-    <input type="text" id="nom" name="nom" placeholder="Nom" required />
-    <input type="text" id="depart" name="depart" placeholder="Lieu de départ" required />
-    <input type="text" id="arrivee" name="arrivee" placeholder="Lieu d'arrivée" required />
-    <textarea id="probleme" name="probleme" placeholder="Description du problème" required></textarea>
+    <input type="email" name="email" placeholder="Adresse e-mail" required />
+    <input type="text" name="prenom" placeholder="Prénom" required />
+    <input type="text" name="nom" placeholder="Nom" required />
+    <input type="text" name="depart" placeholder="Lieu de départ" required />
+    <input type="text" name="arrivee" placeholder="Lieu d'arrivée" required />
+    <textarea name="probleme" placeholder="Description du problème" required></textarea>
 
     <label>Ajouter des photos (optionnel) :</label>
-    <input type="file" id="photos" name="photos[]" accept="image/*" multiple />
+    <input type="file" name="photos[]" id="photos" accept="image/*" multiple capture="environment" />
 
     <button type="submit">Envoyer</button>
   </form>
 
   <script>
     document.getElementById("waForm").addEventListener("submit", function (e) {
-      e.preventDefault();
+      e.preventDefault(); // 🛑 Empêche le submit classique
 
       const form = document.getElementById("waForm");
       const formData = new FormData(form);
+
+      const prenom = form.querySelector('[name="prenom"]').value;
+      const nom = form.querySelector('[name="nom"]').value;
+      const email = form.querySelector('[name="email"]').value;
+      const depart = form.querySelector('[name="depart"]').value;
+      const arrivee = form.querySelector('[name="arrivee"]').value;
+      const probleme = form.querySelector('[name="probleme"]').value;
 
       fetch("https://script.google.com/macros/s/AKfycbzdNoSYnarExhmYEm2zEwq5hTuMCyXqKXd5GeyGz2E/exec", {
         method: "POST",
         body: formData
       })
       .then(response => response.text())
-      .then(text => {
-        console.log("Réponse Apps Script :", text);
-        
-        // WhatsApp
-        const prenom = formData.get("prenom");
-        const nom = formData.get("nom");
-        const email = formData.get("email");
-        const depart = formData.get("depart");
-        const arrivee = formData.get("arrivee");
-        const probleme = formData.get("probleme");
+      .then(result => {
+        console.log("✅ Succès :", result);
 
         const message = `Je suis *${prenom} ${nom}*\nmon email est *${email}*\nmon bureau actuel est *${depart}*\net mon bureau de destination est *${arrivee}*.\nJe rencontre le problème : *${probleme}*`;
-
         const whatsappURL = `https://wa.me/41796882735?text=${encodeURIComponent(message)}`;
-        setTimeout(() => window.open(whatsappURL, "_blank"), 300);
 
-        alert("✅ Demande envoyée !");
+        setTimeout(() => {
+          window.open(whatsappURL, "_blank");
+        }, 100);
+
+        alert("Demande envoyée avec succès !");
       })
       .catch(error => {
-        console.error("Erreur d'envoi :", error);
+        console.error("❌ Erreur lors de l’envoi :", error);
         alert("❌ Une erreur est survenue.");
       });
     });
