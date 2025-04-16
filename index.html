@@ -47,87 +47,41 @@
 
   <h2>Demande d'assistance</h2>
 
-  <form id="waForm" enctype="multipart/form-data">
-  <input type="email" id="email" placeholder="Adresse e-mail" required />
-  <input type="text" id="prenom" placeholder="Prénom" required />
-  <input type="text" id="nom" placeholder="Nom" required />
-  <input type="text" id="depart" placeholder="Lieu de départ" required />
-  <input type="text" id="arrivee" placeholder="Lieu d'arrivée" required />
-  <textarea id="probleme" placeholder="Description du problème" required></textarea>
+  <form id="waForm"
+        action="https://script.google.com/macros/s/AKfycbzdNoSYnarExhmYEm2zEwq5hTuMCyXqKXd5GeyGz2E/exec"
+        method="POST"
+        enctype="multipart/form-data">
 
-  <!-- 📸 Upload de photos -->
-  <label>Ajouter des photos (optionnel) :</label>
-  <input type="file" id="photos" accept="image/*" multiple capture="environment" />
+    <input type="email" name="email" placeholder="Adresse e-mail" required />
+    <input type="text" name="prenom" placeholder="Prénom" required />
+    <input type="text" name="nom" placeholder="Nom" required />
+    <input type="text" name="depart" placeholder="Lieu de départ" required />
+    <input type="text" name="arrivee" placeholder="Lieu d'arrivée" required />
+    <textarea name="probleme" placeholder="Description du problème" required></textarea>
 
-  <button type="submit">Envoyer sur WhatsApp</button>
-</form>
+    <label>Ajouter des photos (optionnel) :</label>
+    <input type="file" name="photos[]" accept="image/*" multiple capture="environment" />
 
-
-  <!-- Formulaire caché vers Google Forms -->
-  <form id="hiddenForm"
-    action="https://docs.google.com/forms/d/e/1FAIpQLSfA_Pt1Lz4ZvYsLoCvIr1mAA4nFvolltBAHW8sAue55Fbff5w/formResponse"
-    method="POST"
-    target="hidden_iframe"
-    style="display: none;">
-    <input name="entry.1884616465" id="formEmail">
-    <input name="entry.309984089" id="formPrenom">
-    <input name="entry.1940246757" id="formNom">
-    <input name="entry.415961000" id="formDepart">
-    <input name="entry.2131571529" id="formArrivee">
-    <input name="entry.1010531137" id="formProbleme">
+    <button type="submit">Envoyer</button>
   </form>
-  <iframe name="hidden_iframe" style="display: none;"></iframe>
 
   <script>
-    document.getElementById("waForm").addEventListener("submit", function (e) {
-  e.preventDefault();
+    // Juste pour déclencher WhatsApp après soumission
+    document.getElementById("waForm").addEventListener("submit", function () {
+      const prenom = document.querySelector('[name="prenom"]').value;
+      const nom = document.querySelector('[name="nom"]').value;
+      const email = document.querySelector('[name="email"]').value;
+      const depart = document.querySelector('[name="depart"]').value;
+      const arrivee = document.querySelector('[name="arrivee"]').value;
+      const probleme = document.querySelector('[name="probleme"]').value;
 
-      const email = document.getElementById("email").value;
-      const prenom = document.getElementById("prenom").value;
-      const nom = document.getElementById("nom").value;
-      const depart = document.getElementById("depart").value;
-      const arrivee = document.getElementById("arrivee").value;
-      const probleme = document.getElementById("probleme").value;
-      const files = document.getElementById("photos").files;
+      const message = `Je suis *${prenom} ${nom}*\nmon email est *${email}*\nmon bureau actuel est *${depart}*\net mon bureau de destination est *${arrivee}*.\nJe rencontre le problème : *${probleme}*`;
+      const whatsappURL = `https://wa.me/41796882735?text=${encodeURIComponent(message)}`;
 
-      const formData = new FormData();
-      formData.append("email", email);
-      formData.append("prenom", prenom);
-      formData.append("nom", nom);
-      formData.append("depart", depart);
-      formData.append("arrivee", arrivee);
-      formData.append("probleme", probleme);
-
-      for (let i = 0; i < files.length; i++) {
-        formData.append("photos[]", files[i]);
-      }
-
-
-      // --- Étape 1 : soumission au Google Forms
-      document.getElementById("formEmail").value = email;
-      document.getElementById("formPrenom").value = prenom;
-      document.getElementById("formNom").value = nom;
-      document.getElementById("formDepart").value = depart;
-      document.getElementById("formArrivee").value = arrivee;
-      document.getElementById("formProbleme").value = probleme;
-      document.getElementById("hiddenForm").submit();
-
-      // --- Étape 2 : envoi vers Google Apps Script
-      fetch("https://script.google.com/macros/s/AKfycbzdNoSYnarExhmYEm2zEwq5hTuMCyXqKXd5GeyGz2E/exec", {
-        method: "POST",
-    body: formData
-  }).then(res => res.text()).then(response => {
-    // 🟢 WhatsApp après succès
-    const message = `Je suis *${prenom} ${nom}*\nmon email est *${email}*\nmon bureau actuel est *${depart}*\net mon bureau de destination est *${arrivee}*.\nJe rencontre le problème : *${probleme}*`;
-    const whatsappURL = `https://wa.me/41796882735?text=${encodeURIComponent(message)}`;
-    setTimeout(() => window.open(whatsappURL, "_blank"), 300);
-    alert("Demande envoyée avec succès !");
-  }).catch(error => {
-    console.error("Erreur : ", error);
-    alert("Erreur d'envoi.");
-      });
-
-     
+      // Attendre un petit peu avant de rediriger
+      setTimeout(() => {
+        window.open(whatsappURL, "_blank");
+      }, 1000);
     });
   </script>
 </body>
