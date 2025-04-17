@@ -1,70 +1,22 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Demande d'assistance - Pelichet</title>
-  <style>
-    body {
-      font-family: 'Trebuchet MS', sans-serif;
-      max-width: 600px;
-      margin: auto;
-      padding: 20px;
-      text-align: center;
-    }
-    input, textarea, button {
-      width: 100%;
-      padding: 10px;
-      margin: 10px 0;
-      font-size: 16px;
-    }
-    button {
-      background-color: #25D366;
-      color: white;
-      border: none;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #128C7E;
-    }
-  </style>
-</head>
-<body>
-  <h2>Demande d'assistance</h2>
-  <form id="waForm"
-        action="https://script.google.com/macros/s/AKfycbzdNoSYnarExhmYEm2zEwq5hTuMCyXqKXd5GeyGz2E/exec"
-        method="POST"
-        enctype="multipart/form-data">
+<form id="myForm">
+  <input type="email" id="email" placeholder="Email" required>
+  <textarea id="description" placeholder="Description" required></textarea>
+  <input type="file" id="photos" multiple required>
+  <button type="submit">Submit</button>
+</form>
 
-    <input type="email" name="email" placeholder="Adresse e-mail" required />
-    <input type="text" name="prenom" placeholder="Prénom" required />
-    <input type="text" name="nom" placeholder="Nom" required />
-    <input type="text" name="depart" placeholder="Lieu de départ" required />
-    <input type="text" name="arrivee" placeholder="Lieu d'arrivée" required />
-    <textarea name="probleme" placeholder="Description du problème" required></textarea>
+<script>
+  document.getElementById('myForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    var email = document.getElementById('email').value;
+    var description = document.getElementById('description').value;
+    var photos = document.getElementById('photos').files;
 
-    <label>Ajouter des photos (optionnel) :</label>
-    <input type="file" name="photos[]" accept="image/*" multiple capture="environment" />
+    // Save photos to Google Drive (you'll need to handle this with a backend service)
+    // Send WhatsApp message
+    var whatsappLink = 'https://wa.me/41796882735?text=' + encodeURIComponent('Email: ' + email + '\nDescription: ' + description);
+    window.open(whatsappLink, '_blank');
 
-    <button type="submit">Envoyer</button>
-  </form>
-
-  <script>
-    document.getElementById("waForm").addEventListener("submit", function () {
-      const prenom = document.querySelector('[name="prenom"]').value;
-      const nom = document.querySelector('[name="nom"]').value;
-      const email = document.querySelector('[name="email"]').value;
-      const depart = document.querySelector('[name="depart"]').value;
-      const arrivee = document.querySelector('[name="arrivee"]').value;
-      const probleme = document.querySelector('[name="probleme"]').value;
-
-      const message = `Je suis *${prenom} ${nom}*\nmon email est *${email}*\nmon bureau actuel est *${depart}*\net mon bureau de destination est *${arrivee}*.\nJe rencontre le problème : *${probleme}*`;
-      const whatsappURL = `https://wa.me/41796882735?text=${encodeURIComponent(message)}`;
-
-      setTimeout(() => {
-        window.open(whatsappURL, "_blank");
-      }, 1000);
-    });
-  </script>
-</body>
-</html>
+    // Send email (you'll need to handle this with a backend service)
+  });
+</script>
